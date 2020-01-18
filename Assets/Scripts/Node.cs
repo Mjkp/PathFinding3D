@@ -4,13 +4,14 @@ using UnityEngine;
 
 namespace PathFinding3D
 {
-    public class Node
+    public class Node : IHeapItem<Node>
     {
 
         public Grid3D Grid { get; private set; }
         public bool isObstacle;
         public Vector3 worldPos;
         public Node parent;
+        public int heapIndex;
 
         public int gCost;
         public int hCost;
@@ -36,9 +37,27 @@ namespace PathFinding3D
             return new Vector3(gridX, gridZ, gridY);
         }
 
+        public int HeapIndex
+        {
+            get
+            {
+                return heapIndex;
+            }
+            set
+            {
+                heapIndex = value;
+            }
+        }
 
-
-
+        public int CompareTo(Node nodeToCompare)
+        {
+            int compare = FCost.CompareTo(nodeToCompare.FCost);
+            if(compare ==0)
+            {
+                compare = hCost.CompareTo(nodeToCompare.hCost);
+            }
+            return -compare;
+        }
     }
 
 }

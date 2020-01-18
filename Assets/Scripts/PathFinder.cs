@@ -1,29 +1,45 @@
-﻿using System.Collections;
+﻿// ===============================
+// AUTHOR          : Justin Moon
+// CREATE DATE     : 17th of January 2020
+// PURPOSE         : A static class for a star pathfinding in 3d grid environment
+// SPECIAL NOTES   : This code was created by Justin Moon. Please mention the author if you use part or the totality of the code.
+// ===============================
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PathFinding3D
+namespace PathFinding3D 
 {
-    public static class PathFinder
+    public static class PathFinder 
     {
         public static List<Node> AstarPathFinder(Grid3D grid, Node startNode, Node goalNode)
         {
-            List<Node> openSet = new List<Node>();
+
+            //List<Node> openSet = new List<Node>(); 
+
+            Heap<Node> openSet = new Heap<Node>(grid.MaxSize); // use List when not using heap
+
             HashSet<Node> closedSet = new HashSet<Node>();
             openSet.Add(startNode);
 
             while(openSet.Count>0)
             {
-                Node currentNode = openSet[0];
-                for(int i = 1; i< openSet.Count;i++) // starts with 1 bc 0th is current Node
-                {
-                    if(openSet[i].FCost<currentNode.FCost || openSet[i].FCost == currentNode.FCost || openSet[i].hCost < currentNode.hCost)
-                   {
-                        currentNode = openSet[i];
-                    }
-                }
 
-                openSet.Remove(currentNode);
+                Node currentNode = openSet.RemoveFirst();
+
+                //Node currentNode = openSet[0];
+                //for(int i = 1; i< openSet.Count;i++) // starts with 1 bc 0th is current Node
+                //{
+                //    if(openSet[i].FCost<currentNode.FCost || openSet[i].FCost == currentNode.FCost || openSet[i].hCost < currentNode.hCost)
+                //   {
+                //        currentNode = openSet[i];
+                //    }
+                //}
+
+                //openSet.Remove(currentNode);
+                             
                 closedSet.Add(currentNode);
 
                 if(currentNode == goalNode)

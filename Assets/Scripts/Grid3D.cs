@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿// ===============================
+// AUTHOR          : Justin Moon
+// CREATE DATE     : 17th of January 2020
+// PURPOSE         : A static class for a star pathfinding in 3d grid environment
+// SPECIAL NOTES   : This code was created by Justin Moon. Please mention the author if you use part or the totality of the code.
+// ===============================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +33,7 @@ namespace PathFinding3D
         int colNum, rowNum, arrayNum;
         float nodeDiameter;
         public List<Node> path;
+        public int MaxSize { get { return colNum * rowNum * arrayNum; } }
 
         private void Start()
         {
