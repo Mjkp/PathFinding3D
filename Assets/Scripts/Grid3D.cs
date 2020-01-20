@@ -16,10 +16,11 @@ namespace PathFinding3D
     {
         public LayerMask obstacle;
         public GameObject obstacleCube;
-        public Renderer visible;
+        private Renderer visible;
+        public GameObject obstacleParent;
 
         //public GameObject ObstacleParent;
-
+        public Transform targetPos;
         public Vector3 startPosIndex;
         public Vector3 goalPosIndex;
         int startCol { get { return (int)startPosIndex.x; } }
@@ -59,7 +60,7 @@ namespace PathFinding3D
         public void Update()
         {
 
-            path = PathFinder.AstarPathFinder(this, grid3D[startCol, startRow, startArray],grid3D[goalCol, goalRow, goalArray]);
+            path = PathFinder.AstarPathFinder(this, grid3D[startCol, startRow, startArray],NodeFromWorldPoints(targetPos.position));
         }
 
 
@@ -75,7 +76,7 @@ namespace PathFinding3D
                         {
                             Vector3 pos = new Vector3(1 + i * nodeDiameter, 1 + j * nodeDiameter, 1 + k * nodeDiameter);
                             GameObject obstaclePrefab = Instantiate(obstacleCube, pos + worldBottomLeft, Quaternion.identity);
-                            obstaclePrefab.transform.parent = this.transform;
+                            obstaclePrefab.transform.parent = obstacleParent.transform;
                             obstaclePrefab.layer = 8;
                             visible = obstaclePrefab.GetComponent<Renderer>();
                             visible.enabled = true;
@@ -84,6 +85,23 @@ namespace PathFinding3D
                     }
                 }
             }
+
+        }
+
+        public Node NodeFromWorldPoints(Vector3 worldPosition)
+        {
+            float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
+            float percentY = (worldPosition.y + gridWorldSize.y / 2) / gridWorldSize.y;
+            float percentZ = (worldPosition.z + gridWorldSize.z / 2) / gridWorldSize.z;
+            percentX = Mathf.Clamp01(percentX);
+            percentY = Mathf.Clamp01(percentY);
+            percentZ = Mathf.Clamp01(percentZ);
+
+            int x = Mathf.RoundToInt((colNum - 1) * percentX);
+            int y = Mathf.RoundToInt((arrayNum - 1) * percentY);
+            int z = Mathf.RoundToInt((rowNum - 1) * percentZ);
+
+            return grid3D[x, z,y];
 
         }
 
@@ -160,11 +178,7 @@ namespace PathFinding3D
                             Gizmos.color = Color.red;
                             Gizmos.DrawCube(n.worldPos, (Vector3.one * 0.5f) * (nodeDiameter));
                         }
-                        else
-                        {
-                            //Gizmos.DrawWireCube(n.worldPos, (Vector3.one * 0.1f) * (nodeDiameter));
 
-                        }
                     }
 
                 }
