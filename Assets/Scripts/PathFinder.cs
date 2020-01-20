@@ -9,12 +9,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 
 namespace PathFinding3D 
 {
     public static class PathFinder 
     {
-        public static List<Node> AstarPathFinder(Grid3D grid, Node startNode, Node goalNode)
+        public static void StartFindPath(Vector3 startPos, Vector3 targetPos)
+        {
+           //StartCoroutine();
+        }
+
+        public static List<Node> AstarPathFinder(Grid3D grid, Node startNode, Node goalNode, ref List<Node> path)
         {
 
             //List<Node> openSet = new List<Node>(); 
@@ -24,11 +30,10 @@ namespace PathFinding3D
             HashSet<Node> closedSet = new HashSet<Node>();
             openSet.Add(startNode);
 
-            while(openSet.Count>0)
+            while (openSet.Count>0)
             {
 
                 Node currentNode = openSet.RemoveFirst();
-
                 //Node currentNode = openSet[0];
                 //for(int i = 1; i< openSet.Count;i++) // starts with 1 bc 0th is current Node
                 //{
@@ -39,12 +44,13 @@ namespace PathFinding3D
                 //}
 
                 //openSet.Remove(currentNode);
-                             
+
                 closedSet.Add(currentNode);
 
                 if(currentNode == goalNode)
                 {
-                    return RetracePath(startNode, goalNode);
+                    path = RetracePath(startNode, goalNode);
+                    return path;
                 }
 
                 foreach (Node neighbour in grid.GetNeighbours(currentNode))
@@ -70,7 +76,7 @@ namespace PathFinding3D
 
                 }
             }
-            List<Node> path = RetracePath(startNode, goalNode);
+            //List<Node> path = RetracePath(startNode, goalNode);
             return path;
         }
 
