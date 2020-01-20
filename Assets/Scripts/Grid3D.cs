@@ -14,6 +14,12 @@ namespace PathFinding3D
 {
     public class Grid3D : MonoBehaviour
     {
+        public LayerMask obstacle;
+        public GameObject obstacleCube;
+        public Renderer visible;
+
+        //public GameObject ObstacleParent;
+
         public Vector3 startPosIndex;
         public Vector3 goalPosIndex;
         int startCol { get { return (int)startPosIndex.x; } }
@@ -24,19 +30,24 @@ namespace PathFinding3D
         int goalRow { get { return (int)goalPosIndex.z; } }
         int goalArray { get { return (int)goalPosIndex.y; } }
 
+        [HideInInspector]
+        public Vector3 worldBottomLeft;
 
-        public LayerMask obstacle;
         public Vector3 gridWorldSize;
         public float nodeRadius;
         Node[,,] grid3D;
 
-        int colNum, rowNum, arrayNum;
-        float nodeDiameter;
+        [HideInInspector]
+        public int colNum, rowNum, arrayNum;
+        [HideInInspector]
+        public float nodeDiameter;
+        [HideInInspector]
         public List<Node> path;
         public int MaxSize { get { return colNum * rowNum * arrayNum; } }
 
         private void Start()
         {
+            
             nodeDiameter = nodeRadius * 2;
             colNum = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
             rowNum = Mathf.RoundToInt(gridWorldSize.z / nodeDiameter);
@@ -51,14 +62,41 @@ namespace PathFinding3D
             path = PathFinder.AstarPathFinder(this, grid3D[startCol, startRow, startArray],grid3D[goalCol, goalRow, goalArray]);
         }
 
+
+        private void GenerateObstacles(int percentage)
+        {
+            for (int i = 0; i < colNum; i++)
+            {
+                for (int j = 0; j < colNum; j++)
+                {
+                    for (int k = 0; k < colNum; k++)
+                    {
+                        if (Random.Range(0, 100) < percentage)
+                        {
+                            Vector3 pos = new Vector3(1 + i * nodeDiameter, 1 + j * nodeDiameter, 1 + k * nodeDiameter);
+                            GameObject obstaclePrefab = Instantiate(obstacleCube, pos + worldBottomLeft, Quaternion.identity);
+                            obstaclePrefab.transform.parent = this.transform;
+                            obstaclePrefab.layer = 8;
+                            visible = obstaclePrefab.GetComponent<Renderer>();
+                            visible.enabled = true;
+
+                        }
+                    }
+                }
+            }
+
+        }
+
         void Create3dGrid()
         {
             grid3D = new Node[colNum, rowNum, arrayNum];
-            Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 
+            worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 
                                                          - Vector3.forward * gridWorldSize.z / 2 
                                                          - Vector3.up * gridWorldSize.y / 2;
 
-            Debug.Log(worldBottomLeft);
+            GenerateObstacles(5); // if there is too much obstacles it can not find a path and gives error
+
+            //Debug.Log(worldBottomLeft);
             for (int i = 0; i < colNum; i++)
             {
                 for (int j = 0; j < colNum; j++)
@@ -115,7 +153,6 @@ namespace PathFinding3D
                 foreach(Node n in grid3D)
                 {
                     Gizmos.color = (n.isObstacle) ? Color.grey : Color.blue;
-                    //if (path != null) if (path.Contains(n)) Gizmos.color = Color.red;
                     if (path != null)
                     {
                         if (path.Contains(n))
@@ -125,7 +162,7 @@ namespace PathFinding3D
                         }
                         else
                         {
-                            Gizmos.DrawWireCube(n.worldPos, (Vector3.one * 0.1f) * (nodeDiameter));
+                            //Gizmos.DrawWireCube(n.worldPos, (Vector3.one * 0.1f) * (nodeDiameter));
 
                         }
                     }

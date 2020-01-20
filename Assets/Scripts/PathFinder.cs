@@ -58,7 +58,14 @@ namespace PathFinding3D
                         neighbour.hCost = GetDistance(neighbour, goalNode);
                         neighbour.parent = currentNode;
 
-                        if (!openSet.Contains(neighbour)) openSet.Add(neighbour);
+                        if (!openSet.Contains(neighbour))
+                        { 
+                        openSet.Add(neighbour);
+                        }
+                        else
+                        {
+                            openSet.UpdateItem(neighbour);
+                        }
                     }
 
                 }
