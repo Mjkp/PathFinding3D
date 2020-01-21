@@ -60,7 +60,7 @@ namespace PathFinding3D
         public void Update()
         {
 
-            path = PathFinder.AstarPathFinder(this, grid3D[startCol, startRow, startArray],NodeFromWorldPoints(targetPos.position), ref path);
+            PathFinder.AstarPathFinder(this, grid3D[startCol, startRow, startArray],NodeFromWorldPoints(targetPos.position), ref path);
         }
 
 

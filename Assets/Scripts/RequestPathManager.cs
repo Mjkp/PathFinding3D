@@ -33,7 +33,7 @@ namespace PathFinding3D
             {
                 currentPathRequest = pathRequestQueue.Dequeue();
                 isProcessingPath = true;
-                PathFinder.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd);
+                //PathFinder.AstarPathFinderVector3(transform.GetComponent<Grid3D>(),currentPathRequest.pathStart, currentPathRequest.pathEnd);
             }
         }
 
@@ -55,8 +55,6 @@ namespace PathFinding3D
                 pathStart = _start;
                 pathEnd = _end;
                 callback = _callback;
-
-                return;
             }
         }
     }
