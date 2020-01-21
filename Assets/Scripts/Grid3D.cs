@@ -14,10 +14,28 @@ namespace PathFinding3D
 {
     public class Grid3D : MonoBehaviour
     {
+        /// <summary>
+        /// layer masks for nodes
+        /// </summary>
         public LayerMask obstacle;
-        public GameObject obstacleCube;
+        public LayerMask semiWalkable;
+
+        /// <summary>
+        /// prefab for regions
+        /// </summary>
+        public GameObject obstacleRegion;
+        public GameObject semiWalkableRegion;
+
+        /// <summary>
+        /// access the Rendere component for each region
+        /// </summary>
         private Renderer visible;
+
+        /// <summary>
+        /// parent for each region
+        /// </summary>
         public GameObject obstacleParent;
+        public GameObject semiWalkableParent;
 
 
         public Vector3 startPosIndex;
@@ -45,8 +63,7 @@ namespace PathFinding3D
         public List<Node> path;
         public int MaxSize { get { return colNum * rowNum * arrayNum; } }
 
-
-        LayerMask walkableMask;
+        public int penaltyValue;
 
         private void Awake()
         {
@@ -59,6 +76,8 @@ namespace PathFinding3D
 
         }
 
+
+
         public void Update()
         {
             //PathFinder.AstarPathFinder(this, NodeFromWorldPoints(startPos.position), NodeFromWorldPoints(targetPos.position), ref path,ref isSuccess);
@@ -66,7 +85,7 @@ namespace PathFinding3D
         }
 
 
-        private void GenerateObstacles(int percentage)
+        private void GenerateObstacles(int obstaclePercentage, int semiwalkablePercentage)
         {
             for (int i = 0; i < colNum; i++)
             {
@@ -74,10 +93,11 @@ namespace PathFinding3D
                 {
                     for (int k = 0; k < colNum; k++)
                     {
-                        if (Random.Range(0, 100) < percentage)
+                        int randomVal = Random.Range(0, 100);
+                        if (randomVal < obstaclePercentage)
                         {
                             Vector3 pos = new Vector3(1 + i * nodeDiameter, 1 + j * nodeDiameter, 1 + k * nodeDiameter);
-                            GameObject obstaclePrefab = Instantiate(obstacleCube, pos + worldBottomLeft, Quaternion.identity);
+                            GameObject obstaclePrefab = Instantiate(obstacleRegion, pos + worldBottomLeft, Quaternion.identity);
                             obstaclePrefab.transform.parent = obstacleParent.transform;
                             ///<<summary>>
                             /// the layer number is 8. So it is ok to write just 8. But the Unity layer is by bits. so it is actually 2 to the power of 8. 
@@ -86,8 +106,17 @@ namespace PathFinding3D
                             obstaclePrefab.layer = (int)Mathf.Log(obstacle.value,2); 
                             visible = obstaclePrefab.GetComponent<Renderer>();
                             visible.enabled = true;
-
                         }
+                        else if(randomVal >= obstaclePercentage && randomVal <= obstaclePercentage + semiwalkablePercentage)
+                        {
+                            Vector3 pos = new Vector3(1 + i * nodeDiameter, 1 + j * nodeDiameter, 1 + k * nodeDiameter);
+                            GameObject WalkablePrefab = Instantiate(semiWalkableRegion, pos + worldBottomLeft, Quaternion.identity);
+                            WalkablePrefab.transform.parent = semiWalkableParent.transform;
+                            WalkablePrefab.layer = (int)Mathf.Log(semiWalkable.value, 2);
+                            visible = WalkablePrefab.GetComponent<Renderer>();
+                            visible.enabled = true;
+                        }
+
                     }
                 }
             }
@@ -118,8 +147,7 @@ namespace PathFinding3D
                                                          - Vector3.forward * gridWorldSize.z / 2 
                                                          - Vector3.up * gridWorldSize.y / 2;
 
-            // TODO generating random obstacles with random weights
-            GenerateObstacles(3); // if there is too much obstacles it can not find a path and gives error
+            GenerateObstacles(3,20); // if there is too much obstacles it can not find a path and gives error
 
             for (int i = 0; i < colNum; i++)
             {
@@ -134,6 +162,7 @@ namespace PathFinding3D
 
                         int movementPenalty = 0 ; 
 
+                        if(Physics.CheckSphere(worldPoint, nodeRadius, semiWalkable)) movementPenalty = penaltyValue;
 
                         grid3D[i, k, j] = new Node(this, notObstacle, worldPoint,i,j,k, movementPenalty);
                                                                         
@@ -177,5 +206,8 @@ namespace PathFinding3D
             Gizmos.DrawWireCube(transform.position, gridWorldSize);
 
         }
+
     }
+
+
 }
