@@ -29,10 +29,10 @@ namespace PathFinding3D
             Node startNode = grid.NodeFromWorldPoints(startPos);
             Node targetNode = grid.NodeFromWorldPoints(targetPos);
 
-            PathFinder.AstarPathFinder(grid, startNode, targetNode,ref path,ref pathFound);
+            AstarPathFinder.AStarPathFinder(grid, startNode, targetNode,ref path,ref pathFound);
             if(pathFound)
             {
-                waypoints = PathFinder.RetraceVectorPath(startNode, targetNode);
+                waypoints = AstarPathFinder.RetraceVectorPath(startNode, targetNode);
             }
             requestManager.FinishedProcessingPath(waypoints, pathFound);
             yield return null;

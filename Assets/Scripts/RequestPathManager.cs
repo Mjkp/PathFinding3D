@@ -26,12 +26,20 @@ namespace PathFinding3D
 
         }
 
+
+        /// <summary>
+        /// RequestPath function has to be static so that it can called by other script without referencing gameobject
+        /// </summary>
+        /// <param name="pathStart">Path start.</param>
+        /// <param name="pathEnd">Path end.</param>
+        /// <param name="callback">Callback.</param>
         public static void RequestPath(Vector3 pathStart, Vector3 pathEnd, Action<Vector3[], bool> callback)
         {
             PathRequest newRequest = new PathRequest(pathStart, pathEnd,callback);
             instance.pathRequestQueue.Enqueue(newRequest);
             instance.TryProcessNext();
         }
+
 
         void TryProcessNext()
         {

@@ -63,11 +63,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Agent.cs" />
+    <Compile Include="Assets\Scripts\AstarPathFinder.cs" />
     <Compile Include="Assets\Scripts\FindPath.cs" />
     <Compile Include="Assets\Scripts\Grid3D.cs" />
     <Compile Include="Assets\Scripts\Heap.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
-    <Compile Include="Assets\Scripts\PathFinder.cs" />
     <Compile Include="Assets\Scripts\RequestPathManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>/Users/justinmoon/Documents/Unity/PathFinding3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

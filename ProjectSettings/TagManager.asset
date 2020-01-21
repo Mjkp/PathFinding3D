@@ -14,8 +14,8 @@ TagManager:
   - 
   - 
   - Obstacle
-  - 
-  - 
+  - walkable
+  - semiWalkable
   - 
   - 
   - 

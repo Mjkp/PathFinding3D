@@ -8,7 +8,7 @@ namespace PathFinding3D
     {
         public Transform target;
         private Vector3[] path;
-        float velocity = 5;
+        float velocity = 15;
         int targetIndex;
 
         private void Start()

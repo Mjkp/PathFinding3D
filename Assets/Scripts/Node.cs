@@ -20,8 +20,11 @@ namespace PathFinding3D
         public int gridY;
         public int gridZ;
 
+        public int movementPenaly;
 
-        public Node(Grid3D _grid, bool _isObstacle, Vector3 _pos, int _gridX, int _gridY, int _gridZ)
+
+
+        public Node(Grid3D _grid, bool _isObstacle, Vector3 _pos, int _gridX, int _gridY, int _gridZ, int _penalty)
         {
             gridX = _gridX;
             gridY = _gridY;
@@ -29,6 +32,7 @@ namespace PathFinding3D
             isObstacle = _isObstacle;
             worldPos = _pos;
             Grid = _grid;
+            movementPenaly = _penalty;
 
         }
 

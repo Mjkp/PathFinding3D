@@ -19,9 +19,7 @@ namespace PathFinding3D
         private Renderer visible;
         public GameObject obstacleParent;
 
-        //public GameObject ObstacleParent;
-        public Transform targetPos;
-        public Transform startPos;
+
         public Vector3 startPosIndex;
         public Vector3 goalPosIndex;
         int startCol { get { return (int)startPosIndex.x; } }
@@ -48,6 +46,8 @@ namespace PathFinding3D
         public int MaxSize { get { return colNum * rowNum * arrayNum; } }
 
 
+        LayerMask walkableMask;
+
         private void Awake()
         {
             
@@ -59,14 +59,11 @@ namespace PathFinding3D
 
         }
 
-        //public void Update()
-        //{
-        //    //PathFinder.AstarPathFinder(this, NodeFromWorldPoints(startPos.position), NodeFromWorldPoints(targetPos.position), ref path,ref isSuccess);
-        //    //if(!isSuccess)
-        //    //{
-        //    //    Debug.Log("no path has found");
-        //    //}
-        //}
+        public void Update()
+        {
+            //PathFinder.AstarPathFinder(this, NodeFromWorldPoints(startPos.position), NodeFromWorldPoints(targetPos.position), ref path,ref isSuccess);
+
+        }
 
 
         private void GenerateObstacles(int percentage)
@@ -82,7 +79,11 @@ namespace PathFinding3D
                             Vector3 pos = new Vector3(1 + i * nodeDiameter, 1 + j * nodeDiameter, 1 + k * nodeDiameter);
                             GameObject obstaclePrefab = Instantiate(obstacleCube, pos + worldBottomLeft, Quaternion.identity);
                             obstaclePrefab.transform.parent = obstacleParent.transform;
-                            obstaclePrefab.layer = 8;
+                            ///<<summary>>
+                            /// the layer number is 8. So it is ok to write just 8. But the Unity layer is by bits. so it is actually 2 to the power of 8. 
+                            /// So I need to convert 10 digit num to 2 digit num by log(x,2);
+                            /// </summary>
+                            obstaclePrefab.layer = (int)Mathf.Log(obstacle.value,2); 
                             visible = obstaclePrefab.GetComponent<Renderer>();
                             visible.enabled = true;
 
@@ -106,7 +107,7 @@ namespace PathFinding3D
             int y = Mathf.RoundToInt((arrayNum - 1) * percentY);
             int z = Mathf.RoundToInt((rowNum - 1) * percentZ);
 
-            return grid3D[x, z,y];
+            return grid3D[x,z,y];
 
         }
 
@@ -117,9 +118,9 @@ namespace PathFinding3D
                                                          - Vector3.forward * gridWorldSize.z / 2 
                                                          - Vector3.up * gridWorldSize.y / 2;
 
+            // TODO generating random obstacles with random weights
             GenerateObstacles(3); // if there is too much obstacles it can not find a path and gives error
 
-            //Debug.Log(worldBottomLeft);
             for (int i = 0; i < colNum; i++)
             {
                 for (int j = 0; j < rowNum; j++)
@@ -130,7 +131,11 @@ namespace PathFinding3D
                                                              + Vector3.forward * (k * nodeDiameter + nodeRadius)
                                                              + Vector3.up * (j * nodeDiameter + nodeRadius);
                         bool notObstacle = !(Physics.CheckSphere(worldPoint, nodeRadius,obstacle));
-                        grid3D[i, k, j] = new Node(this, notObstacle, worldPoint,i,j,k);
+
+                        int movementPenalty = 0 ; 
+
+
+                        grid3D[i, k, j] = new Node(this, notObstacle, worldPoint,i,j,k, movementPenalty);
                                                                         
                     }
                 }
@@ -171,23 +176,6 @@ namespace PathFinding3D
         {
             Gizmos.DrawWireCube(transform.position, gridWorldSize);
 
-            //if (grid3D != null)
-            //{
-            //    foreach(Node n in grid3D)
-            //    {
-            //        Gizmos.color = (n.isObstacle) ? Color.grey : Color.blue;
-            //        if (path != null)
-            //        {
-            //            if (path.Contains(n))
-            //            {
-            //                Gizmos.color = Color.red;
-            //                Gizmos.DrawCube(n.worldPos, (Vector3.one * 0.5f) * (nodeDiameter));
-            //            }
-
-            //        }
-
-            //    }
-            //}
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿<Properties StartupConfiguration="{14673253-F1C0-EE33-9943-54813D02B69A}|">
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/AstarPathFinder.cs">
     <Files>
-      <File FileName="Assets/Scripts/Grid3D.cs" Line="120" Column="13" />
-      <File FileName="Assets/Scripts/Agent.cs" Line="7" Column="30" />
-      <File FileName="Assets/Scripts/FindPath.cs" Line="33" Column="26" />
-      <File FileName="Assets/Scripts/RequestPathManager.cs" Line="43" Column="10" />
-      <File FileName="Assets/Scripts/PathFinder.cs" Line="115" Column="48" />
-      <File FileName="Assets/Scripts/Node.cs" Line="5" Column="1" />
-      <File FileName="Assets/Scripts/Heap.cs" Line="21" Column="47" />
+      <File FileName="Assets/Scripts/Grid3D.cs" Line="127" Column="18" />
+      <File FileName="Assets/Scripts/Agent.cs" Line="9" Column="33" />
+      <File FileName="Assets/Scripts/FindPath.cs" Line="35" Column="35" />
+      <File FileName="Assets/Scripts/RequestPathManager.cs" Line="29" Column="1" />
+      <File FileName="Assets/Scripts/Heap.cs" Line="12" Column="62" />
+      <File FileName="Assets/Scripts/Node.cs" Line="20" Column="26" />
+      <File FileName="Assets/Scripts/AStarPathFinder.cs" Line="21" Column="39" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
