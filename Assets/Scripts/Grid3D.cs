@@ -21,6 +21,7 @@ namespace PathFinding3D
 
         //public GameObject ObstacleParent;
         public Transform targetPos;
+        public Transform startPos;
         public Vector3 startPosIndex;
         public Vector3 goalPosIndex;
         int startCol { get { return (int)startPosIndex.x; } }
@@ -46,7 +47,8 @@ namespace PathFinding3D
         public List<Node> path;
         public int MaxSize { get { return colNum * rowNum * arrayNum; } }
 
-        private void Start()
+
+        private void Awake()
         {
             
             nodeDiameter = nodeRadius * 2;
@@ -57,11 +59,14 @@ namespace PathFinding3D
 
         }
 
-        public void Update()
-        {
-
-            PathFinder.AstarPathFinder(this, grid3D[startCol, startRow, startArray],NodeFromWorldPoints(targetPos.position), ref path);
-        }
+        //public void Update()
+        //{
+        //    //PathFinder.AstarPathFinder(this, NodeFromWorldPoints(startPos.position), NodeFromWorldPoints(targetPos.position), ref path,ref isSuccess);
+        //    //if(!isSuccess)
+        //    //{
+        //    //    Debug.Log("no path has found");
+        //    //}
+        //}
 
 
         private void GenerateObstacles(int percentage)
@@ -112,14 +117,14 @@ namespace PathFinding3D
                                                          - Vector3.forward * gridWorldSize.z / 2 
                                                          - Vector3.up * gridWorldSize.y / 2;
 
-            GenerateObstacles(5); // if there is too much obstacles it can not find a path and gives error
+            GenerateObstacles(3); // if there is too much obstacles it can not find a path and gives error
 
             //Debug.Log(worldBottomLeft);
             for (int i = 0; i < colNum; i++)
             {
-                for (int j = 0; j < colNum; j++)
+                for (int j = 0; j < rowNum; j++)
                 {
-                    for (int k = 0; k < colNum; k++)
+                    for (int k = 0; k < arrayNum; k++)
                     {
                         Vector3 worldPoint = worldBottomLeft + Vector3.right * (i * nodeDiameter + nodeRadius)
                                                              + Vector3.forward * (k * nodeDiameter + nodeRadius)
@@ -147,10 +152,10 @@ namespace PathFinding3D
                         if (i == 0 && j == 0 && k == 0) continue;
 
                         int checkX = node.gridX + i;
-                        int checkY = node.gridY + j;
-                        int checkZ = node.gridZ + k;
+                        int checkY = node.gridY + k;
+                        int checkZ = node.gridZ + j;
 
-                        if( checkX>=0 && checkX < colNum && checkZ>=0 && checkZ<rowNum && checkY>=0&&checkY<arrayNum)
+                        if( checkX>=0 && checkX < colNum && checkZ>=0 && checkZ<rowNum && checkY>=0 && checkY<arrayNum)
                         {
                             neighbours.Add(grid3D[checkX, checkZ, checkY]);
                         }
@@ -166,23 +171,23 @@ namespace PathFinding3D
         {
             Gizmos.DrawWireCube(transform.position, gridWorldSize);
 
-            if (grid3D != null)
-            {
-                foreach(Node n in grid3D)
-                {
-                    Gizmos.color = (n.isObstacle) ? Color.grey : Color.blue;
-                    if (path != null)
-                    {
-                        if (path.Contains(n))
-                        {
-                            Gizmos.color = Color.red;
-                            Gizmos.DrawCube(n.worldPos, (Vector3.one * 0.5f) * (nodeDiameter));
-                        }
+            //if (grid3D != null)
+            //{
+            //    foreach(Node n in grid3D)
+            //    {
+            //        Gizmos.color = (n.isObstacle) ? Color.grey : Color.blue;
+            //        if (path != null)
+            //        {
+            //            if (path.Contains(n))
+            //            {
+            //                Gizmos.color = Color.red;
+            //                Gizmos.DrawCube(n.worldPos, (Vector3.one * 0.5f) * (nodeDiameter));
+            //            }
 
-                    }
+            //        }
 
-                }
-            }
+            //    }
+            //}
         }
     }
 }

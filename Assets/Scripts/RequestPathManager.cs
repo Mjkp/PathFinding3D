@@ -10,13 +10,19 @@ namespace PathFinding3D
         Queue<PathRequest> pathRequestQueue = new Queue<PathRequest>();
         PathRequest currentPathRequest;
 
+        ///<summary>
+        /// static reference is requires since pathRequestQueue is declared outside of RequestPath static void.
+        /// Since we need only one que for all the agents rather than each individual having its own que. 
+        /// </summary>
         static RequestPathManager instance;
+        FindPath pathfinding;
 
         bool isProcessingPath;
 
         private void Awake()
         {
             instance = this;
+            pathfinding = GetComponent<FindPath>();
 
         }
 
@@ -33,7 +39,7 @@ namespace PathFinding3D
             {
                 currentPathRequest = pathRequestQueue.Dequeue();
                 isProcessingPath = true;
-                //PathFinder.AstarPathFinderVector3(transform.GetComponent<Grid3D>(),currentPathRequest.pathStart, currentPathRequest.pathEnd);
+                pathfinding.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd);
             }
         }
 
