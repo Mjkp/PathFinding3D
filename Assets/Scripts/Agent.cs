@@ -13,7 +13,18 @@ namespace PathFinding3D
 
         private void Start()
         {
-            RequestPathManager.RequestPath(transform.position,target.position,OnPathFound);
+            RequestPathManager.RequestPath(transform.position, target.position, OnPathFound);
+
+        }
+
+        private void Update()
+        {
+            //if(Input.GetKeyDown(KeyCode.P))
+            //{
+            //    RequestPathManager.RequestPath(transform.position, target.position, OnPathFound);
+
+            //}
+
         }
 
         Vector3[] NodeToPath(List<Node> _path)
@@ -34,6 +45,12 @@ namespace PathFinding3D
                 targetIndex = 0;
                 StopCoroutine("FollowPath");
                 StartCoroutine("FollowPath");
+            }
+            else
+            {
+                Debug.Log("no path found");
+                RequestPathManager.ClearQueue();
+                Destroy(gameObject);
             }
         }
 
@@ -64,7 +81,7 @@ namespace PathFinding3D
                 for (int i = targetIndex; i < path.Length; i++)
                 {
                     Gizmos.color = Color.red;
-                    Gizmos.DrawCube(path[i], Vector3.one);
+                    Gizmos.DrawCube(path[i], Vector3.one*0.2f);
 
                     if (i == targetIndex)
                     {

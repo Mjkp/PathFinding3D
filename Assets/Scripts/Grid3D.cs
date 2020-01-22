@@ -89,17 +89,43 @@ namespace PathFinding3D
             rowNum = Mathf.RoundToInt(gridWorldSize.z / nodeDiameter);
             arrayNum = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
             Create3dGrid();
-
+            UpdateTargetPosition(pathTarget);
         }
 
 
 
         public void Update()
         {
-            //PathFinder.AstarPathFinder(this, NodeFromWorldPoints(startPos.position), NodeFromWorldPoints(targetPos.position), ref path,ref isSuccess);
+            if(Input.GetKeyDown(KeyCode.T))
+            {
+                UpdateTargetPosition(pathTarget);
 
+            }
+            //PathFinder.AstarPathFinder(this, NodeFromWorldPoints(startPos.position), NodeFromWorldPoints(targetPos.position), ref path,ref isSuccess);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                int agentCount = 0; // counter for agent
+                GenerateAgents(10, ref agentCount);
+            }
         }
 
+        private void UpdateTargetPosition(Transform _target)
+        {
+            while(true)
+            {
+                int randomValX = (int)Random.Range(0, gridWorldSize.x / 2);
+                int randomValY = (int)Random.Range(0, gridWorldSize.y / 2);
+                int randomValZ = (int)Random.Range(0, gridWorldSize.z / 2);
+                Vector3 randomPosition = grid3D[randomValX, randomValZ, randomValY].worldPos;
+                if (!Physics.CheckSphere(randomPosition, nodeRadius , obstacle) 
+                    && !Physics.CheckSphere(randomPosition, nodeRadius , semiWalkable))
+                {
+                    _target.position = randomPosition;
+                    break;
+                }
+            }
+
+        }
 
         private void GenerateRegion(int obstaclePercentage, int semiwalkablePercentage)
         {
@@ -133,11 +159,45 @@ namespace PathFinding3D
                             visible.enabled = true;
                         }
 
-
-
                     }
                 }
             }
+
+        }
+
+        private void GenerateAgents(int totalCount, ref int counter)
+        {
+            if(agentParent.childCount>0)
+            {
+                for (int i = 0; i < agentParent.childCount; i++)
+                {
+                    Destroy(agentParent.GetChild(i).gameObject);
+                }
+            }
+
+
+            while (true)
+            {
+                if (counter < totalCount)
+                {
+                    int randomValX = (int)Random.Range(0, gridWorldSize.x / 2);
+                    int randomValY = (int)Random.Range(0, gridWorldSize.y / 2);
+                    int randomValZ = (int)Random.Range(0, gridWorldSize.z / 2);
+                    Vector3 randomPosition = grid3D[randomValX, randomValZ, randomValY].worldPos;
+                    if (!Physics.CheckSphere(randomPosition, nodeRadius , obstacle))
+                    {
+                        GameObject Agent = Instantiate(agentPrefab, randomPosition, Quaternion.identity);
+                        Agent.transform.parent = agentParent.transform;
+                        Agent.GetComponent<Agent>().target = pathTarget;
+                        counter++;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
 
         }
 
@@ -160,12 +220,14 @@ namespace PathFinding3D
 
         void Create3dGrid()
         {
+
             grid3D = new Node[colNum, rowNum, arrayNum];
             worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 
                                                          - Vector3.forward * gridWorldSize.z / 2 
                                                          - Vector3.up * gridWorldSize.y / 2;
 
             GenerateRegion(4,10); // if there is too much obstacles it can not find a path and gives error
+
 
             for (int i = 0; i < colNum; i++)
             {
@@ -176,6 +238,7 @@ namespace PathFinding3D
                         Vector3 worldPoint = worldBottomLeft + Vector3.right * (i * nodeDiameter + nodeRadius)
                                                              + Vector3.forward * (k * nodeDiameter + nodeRadius)
                                                              + Vector3.up * (j * nodeDiameter + nodeRadius);
+
                         bool notObstacle = !(Physics.CheckSphere(worldPoint, nodeRadius,obstacle));
 
                         int movementPenalty = 0 ; 
@@ -183,10 +246,10 @@ namespace PathFinding3D
                         if(Physics.CheckSphere(worldPoint, nodeRadius, semiWalkable)) movementPenalty = penaltyValue;
 
                         grid3D[i, k, j] = new Node(this, notObstacle, worldPoint,i,j,k, movementPenalty);
-                                                                        
                     }
                 }
             }
+
 
         }
 

@@ -39,9 +39,13 @@ namespace PathFinding3D
             instance.pathRequestQueue.Enqueue(newRequest);
             instance.TryProcessNext();
         }
+        public static void ClearQueue()
+        {
+            instance.pathRequestQueue.Clear();
+        }
 
 
-        void TryProcessNext()
+        public void TryProcessNext()
         {
             if(!isProcessingPath && pathRequestQueue.Count>0)
             {
