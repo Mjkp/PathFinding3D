@@ -44,6 +44,7 @@ namespace PathFinding3D
         public Transform agentParent;
 
         public Transform pathTarget;
+        public int agentNum;
         /// <summary>
         /// incase for inputing 3d array coordinates rather than world position
         /// </summary>
@@ -104,7 +105,7 @@ namespace PathFinding3D
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 int agentCount = 0; // counter for agent
-                GenerateAgents(100, ref agentCount);
+                GenerateAgents(agentNum, ref agentCount);
             }
         }
 

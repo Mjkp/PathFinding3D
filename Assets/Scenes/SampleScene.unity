@@ -432,6 +432,7 @@ MonoBehaviour:
     type: 3}
   agentParent: {fileID: 2099450876}
   pathTarget: {fileID: 1122766902}
+  agentNum: 100
   startPosIndex: {x: 0, y: 0, z: 0}
   goalPosIndex: {x: 6, y: 19, z: 24}
   worldBottomLeft: {x: 0, y: 0, z: 0}
