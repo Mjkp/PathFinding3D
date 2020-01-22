@@ -101,11 +101,10 @@ namespace PathFinding3D
                 UpdateTargetPosition(pathTarget);
 
             }
-            //PathFinder.AstarPathFinder(this, NodeFromWorldPoints(startPos.position), NodeFromWorldPoints(targetPos.position), ref path,ref isSuccess);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 int agentCount = 0; // counter for agent
-                GenerateAgents(10, ref agentCount);
+                GenerateAgents(100, ref agentCount);
             }
         }
 

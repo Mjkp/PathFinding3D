@@ -8,7 +8,7 @@ namespace PathFinding3D
     {
         public Transform target { get; set; }
         private Vector3[] path;
-        float velocity = 10;
+        float velocity = 15;
         int targetIndex;
 
         private void Start()
@@ -19,11 +19,6 @@ namespace PathFinding3D
 
         private void Update()
         {
-            //if(Input.GetKeyDown(KeyCode.P))
-            //{
-            //    RequestPathManager.RequestPath(transform.position, target.position, OnPathFound);
-
-            //}
 
         }
 
