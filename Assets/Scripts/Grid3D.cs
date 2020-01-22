@@ -37,20 +37,35 @@ namespace PathFinding3D
         public GameObject obstacleParent;
         public GameObject semiWalkableParent;
 
+        ///<summary>
+        /// agent Prefab
+        /// </summary>
+        public GameObject agentPrefab;
+        public Transform agentParent;
 
+        public Transform pathTarget;
+        /// <summary>
+        /// incase for inputing 3d array coordinates rather than world position
+        /// </summary>
+        [HideInInspector]
         public Vector3 startPosIndex;
+        [HideInInspector]
         public Vector3 goalPosIndex;
+
         int startCol { get { return (int)startPosIndex.x; } }
         int startRow { get { return (int)startPosIndex.z; } }
         int startArray { get { return (int)startPosIndex.y; } }
-
         int goalCol { get { return (int)goalPosIndex.x; } }
         int goalRow { get { return (int)goalPosIndex.z; } }
         int goalArray { get { return (int)goalPosIndex.y; } }
 
+
         [HideInInspector]
         public Vector3 worldBottomLeft;
 
+        /// <summary>
+        /// size of the bounding box
+        /// </summary>
         public Vector3 gridWorldSize;
         public float nodeRadius;
         Node[,,] grid3D;
@@ -64,6 +79,7 @@ namespace PathFinding3D
         public int MaxSize { get { return colNum * rowNum * arrayNum; } }
 
         public int penaltyValue;
+
 
         private void Awake()
         {
@@ -85,7 +101,7 @@ namespace PathFinding3D
         }
 
 
-        private void GenerateObstacles(int obstaclePercentage, int semiwalkablePercentage)
+        private void GenerateRegion(int obstaclePercentage, int semiwalkablePercentage)
         {
             for (int i = 0; i < colNum; i++)
             {
@@ -117,6 +133,8 @@ namespace PathFinding3D
                             visible.enabled = true;
                         }
 
+
+
                     }
                 }
             }
@@ -147,7 +165,7 @@ namespace PathFinding3D
                                                          - Vector3.forward * gridWorldSize.z / 2 
                                                          - Vector3.up * gridWorldSize.y / 2;
 
-            GenerateObstacles(3,20); // if there is too much obstacles it can not find a path and gives error
+            GenerateRegion(4,10); // if there is too much obstacles it can not find a path and gives error
 
             for (int i = 0; i < colNum; i++)
             {

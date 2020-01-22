@@ -6,9 +6,9 @@ namespace PathFinding3D
 {
     public class Agent : MonoBehaviour
     {
-        public Transform target;
+        public Transform target { get; set; }
         private Vector3[] path;
-        float velocity = 15;
+        float velocity = 10;
         int targetIndex;
 
         private void Start()
